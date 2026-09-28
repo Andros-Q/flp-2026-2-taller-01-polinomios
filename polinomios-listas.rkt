@@ -156,9 +156,21 @@
 
 
 ;;Area del Programador
+
+;;Nombre de la funcion: polinomio-cero
+;;Contrato(input and output): le entra un simbolo ejemplo 'x
+;;y devuelve un polinomio abstracto con su nombre de variable indicada y sin termino en la parte de terminos
+;;Proposito: Poder construir un polinomio sin terminos en la variable dada a construir
 (define polinomio-cero
   (lambda (variable)
-    (eopl:error 'polinomio-cero "Sin implementar")))
+    (cond
+      [(symbol? variable);Validar que en efecto la variable sea un simbolo
+       (poli(nombre-var variable) (sin-terminos))]
+      [else (eopl:error "la variable debe ser un simbolo")]
+    )))
+
+(display (polinomio-cero 'y));Salida esperada
+(display "\n");salto de linea
 
 (define insertar-termino
   (lambda (polinomio coeficiente exponente)
