@@ -154,8 +154,58 @@
     (cadr exp)
     ))
 
+;;Funciones Auxiliares
+
+;;Nombre de la funcion: coef-abstracto->concreto
+;;Contrato(input and output): le entra un coeficiente abstracto(termino->coef term)
+;;y devuelve el coeficiente concreto es decir un coeficiente entero o raciona(numerador/denominador)en este caso
+;;Proposito: poder convertir un termino abstracto a un termino concreto con el objetivo de mostrar la solucion en forma concreta
+;;y tambien se creo la funcion con el proposito de segmentar mejor el codigo y no dejar todo el codigo en una sola funcion.
+(define coef-abstracto->concreto
+  (lambda (exp)
+    (cond
+      [(coef-ent? exp) (coef-ent->n exp)]
+      [(coef-rac? exp) (/ (coef-rac->num exp)
+                          (coef-rac->den exp))]
+      [else (eopl:error
+             'coef-abstracto->concreto "coeficiente invalido")]
+      )
+    ))
+
+;;Nombre de la funcion: buscar-coeficiente
+;;Contrato(input and output): le entra los terminos del polinomio establecido y el exponente establecido por el usuario
+;;y devuelve el coeficiente asociado al exponente establecido por el usuario.En
+;;caso de que no exista el exponente en el polinomio se devuelve un error respecto a que ese exponente no esta asociado a ningun coeficiente
+;;Proposito: poder buscar el coeficiente asociado al exponente ingresado. Su otro proposito es que se creo para trabajar directamente con los terminos
+;;y exponente del polinomio ya de forma organizada y separada .Dejando la funcion principal coeficiente-de mas limpia
+(define buscar-coeficiente
+  (lambda(terms expo)
+    (cond
+      [(sin-terminos? terms)(eopl:error
+       "Lo siento: el polinomio
+       no tiene termino con ese exponete ingresado") ]
+      [else
+       (let (   ;;Funcion auxiliar dentro de funcion buscar
+              [term (mas-terminos->term terms)]  ;Define variables que se van a ligar en la zona exterior
+              [resto (mas-terminos->resto terms)]
+              [expt (termino->expo(mas-terminos->term terms))]
+              )
+          (cond
+            [(= (expo-nat->k expt) expo)
+             (coef-abstracto->concreto
+              (termino->coef term))]
+            [(> expo (expo-nat->k expt)) (eopl:error
+       "Lo siento: el polinomio
+       no tiene termino con ese exponete ingresado")]
+            [else (buscar-coeficiente resto expo)]
+            )
+         )]
+      )
+    ))
+
 
 ;;Area del Programador
+
 
 ;;Nombre de la funcion: polinomio-cero
 ;;Contrato(input and output): le entra un simbolo ejemplo 'x
@@ -174,12 +224,27 @@
 
 (define insertar-termino
   (lambda (polinomio coeficiente exponente)
-    (eopl:error 'insertar-termino "Sin implementar")))
+    (eopl:error 'coeficiente-de "Sin implementar")
+    ))
 
+;;Nombre de la funcion: coeficiente-de
+;;Contrato(input and output): le entra un polinomio y un exponente
+;;y devuelve un coeficiente del polinomio asociado al exponente establecido
+;;Proposito: Poder obtener adecuadamente el coeficiente que esta asociado ala potencia ingresada anterior mente
+;;ejecutandose la logica pesada en la funcion buscar-coeficiente
 (define coeficiente-de
   (lambda (polinomio exponente)
-    (eopl:error 'coeficiente-de "Sin implementar")))
+     (buscar-coeficiente (poli->terms polinomio) exponente)
+    ))
 
 (define eliminar-termino
   (lambda (polinomio exponente)
     (eopl:error 'eliminar-termino "Sin implementar")))
+
+;;Ejemplo poli  p=4x^5+(-3/2)x^2+7 para hacer pruebas
+(define p (poli (nombre-var 'x) (mas-terminos
+ (termino(coef-ent 4) (expo-nat 5))
+ (mas-terminos(termino (coef-rac -3 2) (expo-nat 2))
+   (mas-terminos(termino (coef-ent 7)
+     (expo-nat 0)) (sin-terminos)
+              )))))
