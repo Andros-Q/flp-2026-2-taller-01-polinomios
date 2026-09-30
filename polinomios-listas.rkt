@@ -185,10 +185,10 @@
        "Lo siento: el polinomio
        no tiene termino con ese exponete ingresado") ]
       [else
-       (let (   ;;Funcion auxiliar dentro de funcion buscar
+       (let* (   ;;Funcion auxiliar dentro de funcion buscar
               [term (mas-terminos->term terms)]  ;Define variables que se van a ligar en la zona exterior
               [resto (mas-terminos->resto terms)]
-              [expt (termino->expo(mas-terminos->term terms))]
+              [expt (termino->expo term)]
               )
           (cond
             [(= (expo-nat->k expt) expo)
@@ -203,6 +203,34 @@
       )
     ))
 
+;;Nombre de la funcion: buscar-eliminar
+;;Contrato(input and output): le entra los terminos del polinomio y el exponente del termino a eliminar
+;;y devuelve un polinomio nuevo sin ese termino borrado
+;;Proposito: Poder buscar donde esta el termino que tiene asociado el exponente a borrar y posteriormente borrarlo para
+;;devolver los terminos del polinomio sin ese termino que se solicito borrar por medio del exponente
+(define buscar-eliminar
+  (lambda(terms expo)
+    (cond
+      [(sin-terminos? terms)(eopl:error
+       "Lo siento: el polinomio
+       no tiene termino con ese exponete ingresado por lo tanto no podemos eliminar termino") ]
+      [else
+       (let* (   ;;Funcion auxiliar dentro de funcion buscar
+              [term (mas-terminos->term terms)]  ;Define variables que se van a ligar en la zona exterior
+              [resto (mas-terminos->resto terms)]
+              [expt (termino->expo term)]
+              )
+          (cond
+            [(= (expo-nat->k expt) expo)
+             resto]
+            [(> expo (expo-nat->k expt)) (eopl:error
+       "Lo siento: el polinomio
+       no tiene termino con ese exponete ingresado por lo tanto no podemos eliminar termino")]
+            [else  (mas-terminos term (buscar-eliminar resto expo))]
+            )
+         )]
+      )
+    ))
 
 ;;Area del Programador
 
@@ -237,10 +265,18 @@
      (buscar-coeficiente (poli->terms polinomio) exponente)
     ))
 
+;;Nombre de la funcion: eliminar-termino
+;;Contrato(input and output): le entra un polinomio y el exponente del termino a borrar 
+;;y devuelve un nuevo polinomio abstracto sin ese termino 
+;;Proposito: Poder eliminar un termino del polinomio por medio de un exponente que indica que termino borrar junto con el exponente fue establecido
 (define eliminar-termino
   (lambda (polinomio exponente)
-    (eopl:error 'eliminar-termino "Sin implementar")))
+    (poli (poli->var polinomio)
+          (buscar-eliminar (poli->terms polinomio) exponente)
+      )
+    ))               
 
+    
 ;;Ejemplo poli  p=4x^5+(-3/2)x^2+7 para hacer pruebas
 (define p (poli (nombre-var 'x) (mas-terminos
  (termino(coef-ent 4) (expo-nat 5))
