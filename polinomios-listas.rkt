@@ -172,6 +172,22 @@
       )
     ))
 
+
+;;Nombre de la funcion: coef-concreto->abstracto
+;;Contrato(input and output): le entra un coeficiente concreto ejemplo un 5 y debe devolver un coeficiente abstracto
+;;respetando su tipo de representacion si es entero o racional. ejemplo de salida (coef-ent 5)
+;;Proposito: poder convertir un coeficiente concreto a un coeficiente abstracto con su respectiva representacion
+(define coef-concreto->abstracto
+  (lambda (exp)
+    (cond ;numerator denominator
+      [(integer? exp) (coef-ent exp)]
+      [(rational? exp) (coef-rac (numerator exp)
+                                 (denominator exp))]
+      [else (eopl:error
+             'coef-abstracto->concreto "coeficiente invalido")]
+      )
+    ))
+
 ;;Nombre de la funcion: buscar-coeficiente
 ;;Contrato(input and output): le entra los terminos del polinomio establecido y el exponente establecido por el usuario
 ;;y devuelve el coeficiente asociado al exponente establecido por el usuario.En
@@ -194,7 +210,7 @@
             [(= (expo-nat->k expt) expo)
              (coef-abstracto->concreto
               (termino->coef term))]
-            [(> expo (expo-nat->k expt)) (eopl:error
+            [(> expo (expo-nat->k expt)) (eopl:error 'buscar-coeficiente
        "Lo siento: el polinomio
        no tiene termino con ese exponete ingresado")]
             [else (buscar-coeficiente resto expo)]
@@ -223,7 +239,7 @@
           (cond
             [(= (expo-nat->k expt) expo)
              resto]
-            [(> expo (expo-nat->k expt)) (eopl:error
+            [(> expo (expo-nat->k expt)) (eopl:error 'buscar-eliminar
        "Lo siento: el polinomio
        no tiene termino con ese exponete ingresado por lo tanto no podemos eliminar termino")]
             [else  (mas-terminos term (buscar-eliminar resto expo))]
@@ -231,6 +247,53 @@
          )]
       )
     ))
+
+
+;;Nombre de la funcion: buscar-insertar
+;;Contrato(input and output): le entra terminos del polinomio, un coeficiente y un exponente
+;;y devuelve los terminos incluyendo el termino que tiene el nuevo coeficiente y exponente .O devuelve los
+;;los terminos con uno de ellos modificado por la operacion ,pero eso es en caso de que el nuevo termino tenga el mismo exponente de un termino que ya estaba en el polinomio
+;;Proposito: Poder buscar el lugar exacto en donde insertar el nuevo termino o operar un termino que tiene el mismo exponente para finalmente
+;;devolver los terminos con el nuevo termino ingresado.
+(define buscar-insertar
+  (lambda(terms coef-new expo)
+    (cond
+      [(sin-terminos? terms)
+          (cond  ;Es un verificador en caso que se use de golpe la funcion buscar-insertar
+            [(= coef-new 0) (sin-terminos)]
+            [else (mas-terminos(termino
+             (coef-concreto->abstracto coef-new)
+             (expo-nat expo)) (sin-terminos))]
+           )
+       ]
+      [else
+       (let* (   ;;Funcion auxiliar dentro de funcion buscar
+              [term (mas-terminos->term terms)]  ;Define variables que se van a ligar en la zona exterior
+              [resto (mas-terminos->resto terms)]
+              [expt (termino->expo term)]
+              )
+          (cond
+            [(= (expo-nat->k expt) expo)
+              (if(= (+ coef-new (coef-abstracto->concreto
+              (termino->coef term))) 0)
+                 ;;Si se cumple la condicion
+                 resto
+                 ;;Sino se cumple la condicion
+                 (mas-terminos (termino
+                 (coef-concreto->abstracto (+ coef-new (coef-abstracto->concreto(termino->coef term))
+                    )) (expo-nat expo)) resto)  
+                  
+               )  
+             ]
+            [(> expo (expo-nat->k expt))
+             (mas-terminos (termino (coef-concreto->abstracto coef-new)
+                      (expo-nat expo)) terms)]
+            [else  (mas-terminos term (buscar-insertar resto coef-new expo))]
+            )
+         )]
+      )
+    ))
+
 
 ;;Area del Programador
 
@@ -250,9 +313,27 @@
 (display (polinomio-cero 'y));Salida esperada
 (display "\n");salto de linea
 
+
+;;Nombre de la funcion: insertar-termino
+;;Contrato(input and output): le entra un polinomio, un coeficiente y un exponente
+;;y devuelve un polinomio con un nuevo termino insertado o en caso de que haya
+;;un termino con el mismo exponente lo opera y devuelve el polinomio ya con ese termino operado
+;;Proposito: Poder insertar terminos a un polinomio que trae terminos.Tambien armar un polinomio desde 0 usando esta funcion
+;;finalmente otro objetivo es el de operar un termino ya existente para modificar su valor solo si tienen el mismo exponente
 (define insertar-termino
   (lambda (polinomio coeficiente exponente)
-    (eopl:error 'coeficiente-de "Sin implementar")
+    (cond
+       [(not(and (number? coeficiente)
+             (exact? coeficiente) )) (eopl:error 'insertar-termino
+       "Lo siento: el coeficiente debe ser un numero exacto")]
+       [(not(and (integer? exponente) (>= exponente 0)
+             )) (eopl:error 'insertar-termino
+       "Lo siento: el exponente debe ser un entero no negativo")]
+       [(= coeficiente 0) polinomio]
+       [else (poli (poli->var polinomio)
+          (buscar-insertar (poli->terms polinomio) coeficiente exponente))
+       ]  
+     )
     ))
 
 ;;Nombre de la funcion: coeficiente-de
@@ -276,7 +357,6 @@
       )
     ))               
 
-    
 ;;Ejemplo poli  p=4x^5+(-3/2)x^2+7 para hacer pruebas
 (define p (poli (nombre-var 'x) (mas-terminos
  (termino(coef-ent 4) (expo-nat 5))
