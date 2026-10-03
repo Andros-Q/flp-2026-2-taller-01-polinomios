@@ -241,7 +241,7 @@
              resto]
             [(> expo (expo-nat->k expt)) (eopl:error 'buscar-eliminar
        "Lo siento: el polinomio
-       no tiene termino con ese exponete ingresado por lo tanto no podemos eliminar termino")]
+       no tiene termino con ese exponente ingresado por lo tanto no podemos eliminar termino")]
             [else  (mas-terminos term (buscar-eliminar resto expo))]
             )
          )]
