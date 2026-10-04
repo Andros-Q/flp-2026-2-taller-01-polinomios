@@ -4,23 +4,15 @@
 ;Jhon Fabricio Hurtado Marin Codigo: 2459472
 ;Juan Esteban Aguirre Castañeda Codigo:2459676
 
-;; Taller 1 — Polinomios dispersos.
-;; Parte 1: representación basada en listas.
-;;
-;; Interfaz del TAD. Cada función va comentada con su nombre, su contrato
-;; (entrada -> salida) y su propósito, y ninguna recorre la lista de términos
-;; más de una vez ni la ordena al final.
-;;
-;;   polinomio-cero    : symbol -> polinomio
-;;   insertar-termino  : polinomio x coeficiente x exponente -> polinomio
-;;   coeficiente-de    : polinomio x exponente -> coeficiente
-;;   eliminar-termino  : polinomio x exponente -> polinomio
+;;Taller 1 - Polinomios dispersos
+;;Parte 1: representacion basada en listas
+
+;;Las funciones del TAD son:
+;;polinomio-cero, insertar-termino, coeficiente-de y eliminar-termino
 
 
-;; Se exportan los constructores, predicados y extractores de la
-;; representación basada en listas para poder utilizarlos en los ejemplos
-;; y en el archivo de pruebas. También se exportan las cuatro funciones
-;; principales de la interfaz del TAD.
+;;Se exportan las funciones del TAD, los constructores, los predicados y los
+;;extractores para poder usarlos en el archivo de pruebas
 (provide
  poli
  nombre-var
@@ -64,7 +56,7 @@
 ;;Nombre de la funcion: poli
 ;;Contrato(input and output): recibe una variable y una lista de terminos
 ;;y devuelve un polinomio representado mediante una lista.
-;;Proposito: construir la representación concreta de un polinomio.
+;;Proposito: construir la representacion concreta de un polinomio.
 (define poli  ;<polinomio>
   (lambda(var terms)
     (list 'poli var terms)
@@ -74,7 +66,7 @@
 ;;Nombre de la funcion: nombre-var
 ;;Contrato(input and output): recibe un simbolo y devuelve una variable
 ;;representada mediante una lista.
-;;Proposito: construir la representación abstracta de una variable.
+;;Proposito: construir la representacion abstracta de una variable.
 (define nombre-var ;<variable>
   (lambda(s)
     (list 'nombre-var s)
@@ -84,7 +76,7 @@
 ;;Nombre de la funcion: sin-terminos
 ;;Contrato(input and output): no recibe argumentos y devuelve una lista
 ;;que representa una lista de terminos vacia.
-;;Proposito: construir la representación de un polinomio sin terminos.
+;;Proposito: construir la representacion de un polinomio sin terminos.
 (define sin-terminos ;<terminos> sin terminos
   (lambda()
     (list 'sin-terminos)
@@ -93,7 +85,7 @@
 
 ;;Nombre de la funcion: mas-terminos
 ;;Contrato(input and output): recibe un termino y el resto de una lista
-;;de terminos y devuelve la representación de una lista de terminos.
+;;de terminos y devuelve la representacion de una lista de terminos.
 ;;Proposito: construir una lista de terminos que contiene un termino
 ;;y el resto de los terminos.
 (define mas-terminos ;<terminos> con terminos
@@ -105,7 +97,7 @@
 ;;Nombre de la funcion: termino
 ;;Contrato(input and output): recibe un coeficiente y un exponente
 ;;y devuelve un termino representado mediante una lista.
-;;Proposito: construir la representación abstracta de un termino.
+;;Proposito: construir la representacion abstracta de un termino.
 (define termino ;<termino>
   (lambda(coef expo)
     (list 'termino coef expo)
@@ -115,7 +107,7 @@
 ;;Nombre de la funcion: coef-ent
 ;;Contrato(input and output): recibe un numero entero y devuelve un
 ;;coeficiente entero representado mediante una lista.
-;;Proposito: construir la representación abstracta de un coeficiente entero.
+;;Proposito: construir la representacion abstracta de un coeficiente entero.
 (define coef-ent ;<coeficiente> coeficiente entero
   (lambda(n)
     (list 'coef-ent n)
@@ -125,7 +117,7 @@
 ;;Nombre de la funcion: coef-rac
 ;;Contrato(input and output): recibe numerador y denominador y devuelve
 ;;un coeficiente racional representado mediante una lista.
-;;Proposito: construir la representación abstracta de un coeficiente racional.
+;;Proposito: construir la representacion abstracta de un coeficiente racional.
 (define coef-rac ;<coeficiente> coeficiente racional
   (lambda(num den)
     (list 'coef-rac num den)
@@ -135,7 +127,7 @@
 ;;Nombre de la funcion: expo-nat
 ;;Contrato(input and output): recibe un entero natural y devuelve un
 ;;exponente representado mediante una lista.
-;;Proposito: construir la representación abstracta de un exponente natural.
+;;Proposito: construir la representacion abstracta de un exponente natural.
 (define expo-nat ;<exponente>
   (lambda(k)
     (list 'expo-nat k)
@@ -150,9 +142,9 @@
 
 ;;Nombre de la funcion: poli?
 ;;Contrato(input and output): recibe una expresion y devuelve #t si
-;;la expresion corresponde a la representación de un polinomio y #f
+;;la expresion corresponde a la representacion de un polinomio y #f
 ;;en caso contrario.
-;;Proposito: identificar si una expresión tiene la etiqueta de polinomio.
+;;Proposito: identificar si una expresion tiene la etiqueta de polinomio.
 (define poli?
   (lambda(exp)
     ;;Confirmo con pair que en efecto es una lista y luego que la expresion
@@ -164,7 +156,7 @@
 ;;Nombre de la funcion: nombre-var?
 ;;Contrato(input and output): recibe una expresion y devuelve #t si
 ;;representa una variable y #f en caso contrario.
-;;Proposito: identificar la representación de una variable.
+;;Proposito: identificar la representacion de una variable.
 (define nombre-var?
   (lambda(exp)
    (and (pair? exp) (equal? (car exp) 'nombre-var)
@@ -174,7 +166,7 @@
 ;;Nombre de la funcion: sin-terminos?
 ;;Contrato(input and output): recibe una expresion y devuelve #t si
 ;;representa una lista de terminos vacia y #f en caso contrario.
-;;Proposito: identificar la representación de una lista de terminos vacia.
+;;Proposito: identificar la representacion de una lista de terminos vacia.
 (define sin-terminos?
   (lambda(exp)
    (and (pair? exp) (equal? (car exp) 'sin-terminos)
@@ -184,7 +176,7 @@
 ;;Nombre de la funcion: mas-terminos?
 ;;Contrato(input and output): recibe una expresion y devuelve #t si
 ;;representa una lista de terminos con al menos un termino.
-;;Proposito: identificar la representación de una lista de terminos no vacia.
+;;Proposito: identificar la representacion de una lista de terminos no vacia.
 (define mas-terminos?
   (lambda(exp)
    (and (pair? exp) (equal? (car exp) 'mas-terminos)
@@ -194,7 +186,7 @@
 ;;Nombre de la funcion: termino?
 ;;Contrato(input and output): recibe una expresion y devuelve #t si
 ;;representa un termino y #f en caso contrario.
-;;Proposito: identificar la representación de un termino.
+;;Proposito: identificar la representacion de un termino.
 (define termino?
   (lambda(exp)
    (and (pair? exp) (equal? (car exp) 'termino)
@@ -204,7 +196,7 @@
 ;;Nombre de la funcion: coef-ent?
 ;;Contrato(input and output): recibe una expresion y devuelve #t si
 ;;representa un coeficiente entero y #f en caso contrario.
-;;Proposito: identificar la representación de un coeficiente entero.
+;;Proposito: identificar la representacion de un coeficiente entero.
 (define coef-ent?
   (lambda(exp)
     (and (pair? exp) (equal? (car exp) 'coef-ent)
@@ -214,7 +206,7 @@
 ;;Nombre de la funcion: coef-rac?
 ;;Contrato(input and output): recibe una expresion y devuelve #t si
 ;;representa un coeficiente racional y #f en caso contrario.
-;;Proposito: identificar la representación de un coeficiente racional.
+;;Proposito: identificar la representacion de un coeficiente racional.
 (define coef-rac?
   (lambda(exp)
    (and (pair? exp) (equal? (car exp) 'coef-rac)
@@ -224,7 +216,7 @@
 ;;Nombre de la funcion: expo-nat?
 ;;Contrato(input and output): recibe una expresion y devuelve #t si
 ;;representa un exponente natural y #f en caso contrario.
-;;Proposito: identificar la representación de un exponente natural.
+;;Proposito: identificar la representacion de un exponente natural.
 (define expo-nat?
   (lambda(exp)
    (and (pair? exp) (equal? (car exp) 'expo-nat)
@@ -605,3 +597,74 @@
        ]
       )
     ))
+
+
+;;=====================================================
+;;Ejemplos de construccion y uso (representacion con listas)
+;;No se definen como codigo porque los archivos de implementacion
+;;no llevan pruebas. Cada ejemplo muestra la expresion y lo que devuelve.
+;;=====================================================
+
+;;Polinomio que se usa en varios ejemplos:
+;;p = 4x^5 - (3/2)x^2 + 7
+;;p = (insertar-termino
+;;      (insertar-termino
+;;        (insertar-termino (polinomio-cero 'x) 4 5)
+;;        -3/2 2)
+;;      7 0)
+
+
+;;Construccion de polinomios
+;;1. (polinomio-cero 'x)
+;;   => el polinomio cero en x
+;;2. (insertar-termino (polinomio-cero 'x) 7 0)
+;;   => el polinomio 7
+;;3. (insertar-termino (polinomio-cero 'x) 3/2 1)
+;;   => el polinomio (3/2)x
+;;4. (insertar-termino (insertar-termino (polinomio-cero 'x) 7 0) 4 5)
+;;   => 4x^5 + 7
+;;5. p (el polinomio de arriba)
+;;   => 4x^5 - (3/2)x^2 + 7
+
+
+;;polinomio-cero
+;;1. (polinomio-cero 'x)  => polinomio sin terminos en la variable x
+;;2. (polinomio-cero 'y)  => polinomio sin terminos en la variable y
+;;3. (polinomio-cero 'z)  => polinomio sin terminos en la variable z
+;;4. (coeficiente-de (polinomio-cero 'x) 0)
+;;                        => error, el polinomio cero no tiene terminos
+;;5. (polinomio-cero 5)   => error, la variable debe ser un simbolo
+
+
+;;insertar-termino
+;;1. (insertar-termino (polinomio-cero 'x) 7 0)
+;;   => el polinomio 7
+;;2. (insertar-termino (polinomio-cero 'x) 3/2 1)
+;;   => el polinomio (3/2)x
+;;3. (insertar-termino (insertar-termino (polinomio-cero 'x) 7 0) 4 5)
+;;   => 4x^5 + 7 (el termino de mayor exponente queda primero)
+;;4. (insertar-termino (insertar-termino (polinomio-cero 'x) 3 2) 5 2)
+;;   => 8x^2 (mismo exponente: se suman los coeficientes)
+;;5. (insertar-termino (insertar-termino (polinomio-cero 'x) 3 2) -3 2)
+;;   => el polinomio cero (la suma da 0 y el termino desaparece)
+
+
+;;coeficiente-de   (con p = 4x^5 - (3/2)x^2 + 7)
+;;1. (coeficiente-de p 5)   => 4
+;;2. (coeficiente-de p 2)   => -3/2
+;;3. (coeficiente-de p 0)   => 7
+;;4. (coeficiente-de p 3)   => error, p no tiene termino con exponente 3
+;;5. (coeficiente-de p -1)  => error, el exponente debe ser un entero no negativo
+
+
+;;eliminar-termino   (con p = 4x^5 - (3/2)x^2 + 7)
+;;1. (eliminar-termino p 5)
+;;   => -(3/2)x^2 + 7, y (coeficiente-de ... 2) da -3/2
+;;2. (eliminar-termino p 2)
+;;   => 4x^5 + 7, y (coeficiente-de ... 0) da 7
+;;3. (eliminar-termino p 0)
+;;   => 4x^5 - (3/2)x^2, y (coeficiente-de ... 5) da 4
+;;4. (eliminar-termino (eliminar-termino (eliminar-termino p 5) 2) 0)
+;;   => el polinomio cero
+;;5. (eliminar-termino p 3)
+;;   => error, p no tiene termino con exponente 3
