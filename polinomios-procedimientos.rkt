@@ -87,3 +87,87 @@
         [(= s 0) 'expo-nat]
         [(= s 1) k]
         [else (eopl:error 'expo-nat "selector invalido")]))))
+
+
+;;Predicados
+;;los predicados validan si la expresion corresponde al tipo esperado
+;;en este caso, use procedure? exp para confirmar que es una clausula y tambien use equal? para
+;;confirmar que se identifique con el contructor correstamente
+
+(define poli?
+  (lambda (exp)
+    (and (procedure? exp) (equal? (exp 0) 'poli))))
+
+(define nombre-var?
+  (lambda (exp)
+    (and (procedure? exp) (equal? (exp 0) 'nombre-var))))
+
+(define sin-terminos?
+  (lambda (exp)
+    (and (procedure? exp) (equal? (exp 0) 'sin-terminos))))
+
+(define mas-terminos?
+  (lambda (exp)
+    (and (procedure? exp) (equal? (exp 0) 'mas-terminos))))
+
+(define termino?
+  (lambda (exp)
+    (and (procedure? exp) (equal? (exp 0) 'termino))))
+
+(define coef-ent?
+  (lambda (exp)
+    (and (procedure? exp) (equal? (exp 0) 'coef-ent))))
+
+(define coef-rac?
+  (lambda (exp)
+    (and (procedure? exp) (equal? (exp 0) 'coef-rac))))
+
+(define expo-nat?
+  (lambda (exp)
+    (and (procedure? exp) (equal? (exp 0) 'expo-nat))))
+
+;;Extractores
+
+(define poli->var
+  (lambda (p)
+    (p 1)))   ;;obtenemos la variable del polinomio
+
+(define poli->terms
+  (lambda (p)
+    (p 2)))   ;;obtenemos los términos del polinomio
+
+(define nombre-var->s
+  (lambda (v)
+    (v 1)))   ;;obtenemos el símbolo de la variable
+
+(define mas-terminos->term
+  (lambda (mt)
+    (mt 1)))  ;;obtenemos el primer término
+
+(define mas-terminos->resto
+  (lambda (mt)
+    (mt 2)))  ;;obtenemos el resto de términos
+
+(define termino->coef
+  (lambda (t)
+    (t 1)))   ;;obtenemos el coeficiente del término
+
+(define termino->expo
+  (lambda (t)
+    (t 2)))   ;;obtenemos el exponente del término
+
+(define coef-ent->n
+  (lambda (c)
+    (c 1)))   ;;obtenemos el número entero
+
+(define coef-rac->num
+  (lambda (c)
+    (c 1)))   ;;obtenemos el numerador del racional
+
+(define coef-rac->den
+  (lambda (c)
+    (c 2)))   ;;obtenemos el denominador del racional
+
+(define expo-nat->k
+  (lambda (e)
+    (e 1)))   ;;obtenemos el valor del exponente
