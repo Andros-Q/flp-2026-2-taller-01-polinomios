@@ -10,7 +10,7 @@ de Programación — Universidad del Valle, Sede Tuluá.
 | Andres Felipe Quiceno Gil | 2477362 | {{correo}} |
 | Yonier Alejandro Vega Rojas | 2477056 | {{correo}} |
 | Jhon Fabricio Hurtado Marin | 2459472 | hurtado.jhoan@correounivalle.edu.co|
-| Juan Esteban Aguirre Castañeda | 2459676 | {{correo}} |
+| Juan Esteban Aguirre Castañeda | 2459676 | juan.esteban.aguirre@correounivalle.edu.co |
 
 ---
 
