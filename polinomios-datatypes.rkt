@@ -486,11 +486,32 @@
 ;;sumar
 ;;1. (sumar p (polinomio-cero 'x))
 ;;   => p sin cambios
-;;2. (sumar (4x^5 + 3x^2) (2x^5 + x^2))
+
+;;2.
+;;(sumar (4x^5 + 3x^2) (2x^5 + x^2))
+;;
+;;(sumar (insertar-termino
+;;(insertar-termino (polinomio-cero 'x) 3 2) 
+;;    4 5)  (insertar-termino
+;;  (insertar-termino (polinomio-cero 'x) 1 2)
+;;      2 5)) 
 ;;   => 6x^5 + 4x^2
-;;3. (sumar (x^3) (x))
+
+
+;;3.
+;;(sumar (x^3) (x))
+;; (sumar (insertar-termino (polinomio-cero 'x)
+;;      1 3) (insertar-termino (polinomio-cero 'x)
+;;          1 1))
 ;;   => x^3 + x (los exponentes distintos se mezclan en orden)
-;;4. (sumar (3x^2) (-3x^2))
+
+
+;;4.
+;;(sumar(3x^2) (-3x^2))
+;;(sumar (insertar-termino (polinomio-cero 'x)
+;;      3 2) (insertar-termino (polinomio-cero 'x)
+;;   -3 2))
 ;;   => el polinomio cero (los coeficientes se cancelan)
+
 ;;5. (sumar (polinomio-cero 'x) (polinomio-cero 'y))
 ;;   => error, los polinomios deben tener la misma variable
