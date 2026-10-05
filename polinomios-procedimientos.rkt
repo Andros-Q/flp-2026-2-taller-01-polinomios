@@ -483,3 +483,99 @@
        ]
       )
     ))
+
+;;=====================================================
+;;Ejemplos de construccion y uso (representacion con procedimientos)
+;;No se definen como codigo porque los archivos de implementacion
+;;no llevan pruebas. Cada ejemplo muestra la expresion y lo que devuelve.
+;;=====================================================
+
+;;Polinomio que se usa en varios ejemplos:
+;;p = 4x^5 - (3/2)x^2 + 7
+;;p = (insertar-termino
+;;      (insertar-termino
+;;        (insertar-termino (polinomio-cero 'x) 4 5)
+;;        -3/2 2)
+;;      7 0)
+
+
+;;Construccion de datos con los constructores y uso de los observadores
+;;(p = 4x^5 - (3/2)x^2 + 7 construido a mano, sin insertar-termino)
+;;p = (poli (nombre-var 'x)
+;;          (mas-terminos (termino (coef-ent 4) (expo-nat 5))
+;;            (mas-terminos (termino (coef-rac -3 2) (expo-nat 2))
+;;              (mas-terminos (termino (coef-ent 7) (expo-nat 0))
+;;                (sin-terminos)))))
+;;
+;;Constructores
+;;1. (poli (nombre-var 'x) (sin-terminos))
+;;   => el polinomio cero en x
+;;2. (termino (coef-ent 4) (expo-nat 5))
+;;   => el termino 4x^5
+;;3. (mas-terminos (termino (coef-ent 7) (expo-nat 0)) (sin-terminos))
+;;   => la lista de terminos que solo tiene el termino 7
+;;4. (poli (nombre-var 'x)
+;;         (mas-terminos (termino (coef-rac -3 2) (expo-nat 2)) (sin-terminos)))
+;;   => el polinomio -(3/2)x^2
+;;5. p (el polinomio de arriba)
+;;   => 4x^5 - (3/2)x^2 + 7
+;;
+;;Observadores: predicados
+;;6. (poli? (polinomio-cero 'x))      => #t
+;;7. (mas-terminos? (sin-terminos))   => #f
+;;8. (coef-rac? (coef-ent 4))         => #f
+;;
+;;Observadores: extractores
+;;9.  (nombre-var->s (poli->var (polinomio-cero 'y)))   => y
+;;10. (coef-rac->den (coef-rac -3 2))                   => 2
+;;11. (expo-nat->k (termino->expo (mas-terminos->term (poli->terms p))))
+;;    => 5
+;;12. (coef-ent->n
+;;      (termino->coef
+;;        (mas-terminos->term
+;;          (mas-terminos->resto (mas-terminos->resto (poli->terms p))))))
+;;    => 7
+
+
+;;polinomio-cero
+;;1. (polinomio-cero 'x)  => polinomio sin terminos en la variable x
+;;2. (polinomio-cero 'y)  => polinomio sin terminos en la variable y
+;;3. (polinomio-cero 'z)  => polinomio sin terminos en la variable z
+;;4. (coeficiente-de (polinomio-cero 'x) 0)
+;;                        => error, el polinomio cero no tiene terminos
+;;5. (polinomio-cero 5)   => error, la variable debe ser un simbolo
+
+
+;;insertar-termino
+;;1. (insertar-termino (polinomio-cero 'x) 7 0)
+;;   => el polinomio 7
+;;2. (insertar-termino (polinomio-cero 'x) 3/2 1)
+;;   => el polinomio (3/2)x
+;;3. (insertar-termino (insertar-termino (polinomio-cero 'x) 7 0) 4 5)
+;;   => 4x^5 + 7 (el termino de mayor exponente queda primero)
+;;4. (insertar-termino (insertar-termino (polinomio-cero 'x) 3 2) 5 2)
+;;   => 8x^2 (mismo exponente: se suman los coeficientes)
+;;5. (insertar-termino (insertar-termino (polinomio-cero 'x) 3 2) -3 2)
+;;   => el polinomio cero (la suma da 0 y el termino desaparece)
+
+
+;;coeficiente-de   (con p = 4x^5 - (3/2)x^2 + 7)
+;;1. (coeficiente-de p 5)   => 4
+;;2. (coeficiente-de p 2)   => -3/2
+;;3. (coeficiente-de p 0)   => 7
+;;4. (coeficiente-de p 3)   => error, p no tiene termino con exponente 3
+;;5. (coeficiente-de p -1)  => error, el exponente debe ser un entero no negativo
+
+
+;;eliminar-termino   (con p = 4x^5 - (3/2)x^2 + 7)
+;;1. (eliminar-termino p 5)
+;;   => -(3/2)x^2 + 7, y (coeficiente-de ... 2) da -3/2
+;;2. (eliminar-termino p 2)
+;;   => 4x^5 + 7, y (coeficiente-de ... 0) da 7
+;;3. (eliminar-termino p 0)
+;;   => 4x^5 - (3/2)x^2, y (coeficiente-de ... 5) da 4
+;;4. (eliminar-termino (eliminar-termino (eliminar-termino p 5) 2) 0)
+;;   => el polinomio cero
+;;5. (eliminar-termino p 3)
+;;   => error, p no tiene termino con exponente 3
+
