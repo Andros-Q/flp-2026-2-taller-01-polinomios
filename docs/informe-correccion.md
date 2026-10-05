@@ -601,3 +601,28 @@ gramática, y el argumento es el mismo.
 cliente notaría la diferencia si saliera de la interfaz, por ejemplo:
 
 - usando `car` o `cdr` sobre un polinomio, que funciona con listas y
+  falla con procedimientos (un procedimiento no es un par);
+- aplicando un polinomio como si fuera una función, por ejemplo `(p 1)`,
+  que funciona con procedimientos y falla con listas;
+- comparando polinomios completos con `equal?`, que compara la estructura
+  con listas, pero con procedimientos dos datos iguales nunca son
+  `equal?` (son procedimientos distintos).
+
+Ninguna de las cuatro funciones de la interfaz ni sus auxiliares hace algo
+así: solo usan constructores, predicados y extractores. Por eso la batería
+común de `pruebas-polinomios.rkt` compara los resultados a través de la
+interfaz (con `coeficiente-de` y `check-exn`) y no con `equal?` sobre la
+estructura interna, y por eso la misma batería sirve sin cambios sobre las
+tres representaciones.
+
+---
+
+## 4. Referencias
+
+- Friedman, D. P., & Wand, M. *Essentials of Programming Languages*,
+  3.ª ed., MIT Press, 2008. Sección 2.1 (especificación de datos),
+  sección 2.2 (representaciones de un TAD), sección 2.4
+  (`define-datatype` y `cases`).
+- The Racket Reference, Numbers:
+  <https://docs.racket-lang.org/reference/numbers.html>.
+- RackUnit, Unit Testing: <https://docs.racket-lang.org/rackunit/>.
