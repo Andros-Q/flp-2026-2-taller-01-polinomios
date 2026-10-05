@@ -7,8 +7,8 @@ de Programación — Universidad del Valle, Sede Tuluá.
 
 | Nombre | Código | Correo institucional |
 |--------|--------|----------------------|
-| Andres Felipe Quiceno Gil | 2477362 | {{correo}} |
-| Yonier Alejandro Vega Rojas | 2477056 | {{correo}} |
+| Andres Felipe Quiceno Gil | 2477362 | quiceno.andres@correounivalle.edu.co |
+| Yonier Alejandro Vega Rojas | 2477056 | yonier.vega@correounivalle.edu.co |
 | Jhon Fabricio Hurtado Marin | 2459472 | hurtado.jhoan@correounivalle.edu.co |
 | Juan Esteban Aguirre Castañeda | 2459676 | juan.esteban.aguirre@correounivalle.edu.co |
 
@@ -154,33 +154,60 @@ inducción sobre la lista de términos en la auxiliar.
 **Código.**
 
 ```racket
-;; coeficiente-de : polinomio x exponente -> coeficiente concreto
-;; Propósito: validar el exponente y delegar la búsqueda.
+;;Nombre de la funcion: coeficiente-de
+;;Contrato(input and output): le entra un polinomio y un exponente
+;;y devuelve un coeficiente del polinomio asociado al exponente establecido
+;;Proposito: Poder obtener adecuadamente el coeficiente que esta asociado ala potencia ingresada anterior mente
+;;ejecutandose la logica pesada en la funcion buscar-coeficiente
 (define coeficiente-de
   (lambda (polinomio exponente)
     (cond
-      [(not (and (integer? exponente) (exact? exponente) (>= exponente 0)))
-       (eopl:error 'coeficiente-de "Lo siento: el exponente debe ser un entero no negativo")]
-      [else (buscar-coeficiente (poli->terms polinomio) exponente)])))
+      [(not (and (integer? exponente)
+                 (exact? exponente)
+                 (>= exponente 0)))
+       (eopl:error
+        'coeficiente-de
+        "Lo siento: el exponente debe ser un entero no negativo")]
+      [else
+       (buscar-coeficiente
+        (poli->terms polinomio)
+        exponente)]
+      )
+    ))
 
-;; buscar-coeficiente : terminos x exponente -> coeficiente concreto
-;; Propósito: recorrer los términos y devolver el coeficiente del que
-;; tiene el exponente buscado; error si no existe.
+
+;;Nombre de la funcion: buscar-coeficiente
+;;Contrato(input and output): le entra los terminos del polinomio establecido y el exponente establecido por el usuario
+;;y devuelve el coeficiente asociado al exponente establecido por el usuario.En
+;;caso de que no exista el exponente en el polinomio se devuelve un error respecto a que ese exponente no esta asociado a ningun coeficiente
+;;Proposito: poder buscar el coeficiente asociado al exponente ingresado. Su otro proposito es que se creo para trabajar directamente con los terminos
+;;y exponente del polinomio ya de forma organizada y separada .Dejando la funcion principal coeficiente-de mas limpia
 (define buscar-coeficiente
-  (lambda (terms expo)
+  (lambda(terms expo)
     (cond
       [(sin-terminos? terms)
-       (eopl:error 'buscar-coeficiente "Lo siento: el polinomio no tiene termino con ese exponente ingresado")]
+       (eopl:error
+        'buscar-coeficiente
+        "Lo siento: el polinomio no tiene termino con ese exponente ingresado")]
       [else
-       (let* ([term (mas-terminos->term terms)]
+       (let* (   ;;Funcion auxiliar dentro de funcion buscar
+              [term (mas-terminos->term terms)]  ;Define variables que se van a ligar en la zona exterior
               [resto (mas-terminos->resto terms)]
-              [expt (termino->expo term)])
-         (cond
-           [(= (expo-nat->k expt) expo)
-            (coef-abstracto->concreto (termino->coef term))]
-           [(> expo (expo-nat->k expt))
-            (eopl:error 'buscar-coeficiente "Lo siento: el polinomio no tiene termino con ese exponente ingresado")]
-           [else (buscar-coeficiente resto expo)]))])))
+              [expt (termino->expo term)]
+              )
+          (cond
+            [(= (expo-nat->k expt) expo)
+             (coef-abstracto->concreto
+              (termino->coef term))]
+            [(> expo (expo-nat->k expt))
+             (eopl:error
+              'buscar-coeficiente
+              "Lo siento: el polinomio no tiene termino con ese exponente ingresado")]
+            [else (buscar-coeficiente resto expo)]
+            )
+         )]
+      )
+    ))
 ```
 
 **Lo que se demuestra.** Sea $B(L, e)$ el resultado de
@@ -284,33 +311,61 @@ cuando no existe. Además termina.
 **Código.**
 
 ```racket
-;; eliminar-termino : polinomio x exponente -> polinomio
-;; Propósito: validar el exponente y devolver un polinomio sin el término.
+;;Nombre de la funcion: eliminar-termino
+;;Contrato(input and output): le entra un polinomio y el exponente del termino a borrar
+;;y devuelve un nuevo polinomio abstracto sin ese termino
+;;Proposito: Poder eliminar un termino del polinomio por medio de un exponente que indica que termino borrar junto con el exponente fue establecido.
 (define eliminar-termino
   (lambda (polinomio exponente)
     (cond
-      [(not (and (integer? exponente) (exact? exponente) (>= exponente 0)))
-       (eopl:error 'eliminar-termino "Lo siento: el exponente debe ser un entero no negativo")]
+      [(not (and (integer? exponente)
+                 (exact? exponente)
+                 (>= exponente 0)))
+       (eopl:error
+        'eliminar-termino
+        "Lo siento: el exponente debe ser un entero no negativo")]
       [else
-       (poli (poli->var polinomio)
-             (buscar-eliminar (poli->terms polinomio) exponente))])))
+       (poli
+        (poli->var polinomio)
+        (buscar-eliminar
+         (poli->terms polinomio)
+         exponente))
+       ]
+      )
+    ))
 
-;; buscar-eliminar : terminos x exponente -> terminos
-;; Propósito: devolver los términos sin el de exponente dado; error si no existe.
+
+;;Nombre de la funcion: buscar-eliminar
+;;Contrato(input and output): le entra los terminos del polinomio y el exponente del termino a eliminar
+;;y devuelve un polinomio nuevo sin ese termino borrado
+;;Proposito: Poder buscar donde esta el termino que tiene asociado el exponente a borrar y posteriormente borrarlo para
+;;devolver los terminos del polinomio sin ese termino que se solicito borrar por medio del exponente
 (define buscar-eliminar
-  (lambda (terms expo)
+  (lambda(terms expo)
     (cond
       [(sin-terminos? terms)
-       (eopl:error 'buscar-eliminar "Lo siento: el polinomio no tiene termino con ese exponente ingresado por lo tanto no podemos eliminar termino")]
+       (eopl:error
+        'buscar-eliminar
+        "Lo siento: el polinomio no tiene termino con ese exponente ingresado por lo tanto no podemos eliminar termino")]
       [else
-       (let* ([term (mas-terminos->term terms)]
+       (let* (   ;;Funcion auxiliar dentro de funcion buscar
+              [term (mas-terminos->term terms)]  ;Define variables que se van a ligar en la zona exterior
               [resto (mas-terminos->resto terms)]
-              [expt (termino->expo term)])
-         (cond
-           [(= (expo-nat->k expt) expo) resto]
-           [(> expo (expo-nat->k expt))
-            (eopl:error 'buscar-eliminar "Lo siento: el polinomio no tiene termino con ese exponente ingresado por lo tanto no podemos eliminar termino")]
-           [else (mas-terminos term (buscar-eliminar resto expo))]))])))
+              [expt (termino->expo term)]
+              )
+          (cond
+            [(= (expo-nat->k expt) expo)
+             resto]
+            [(> expo (expo-nat->k expt))
+             (eopl:error
+              'buscar-eliminar
+              "Lo siento: el polinomio no tiene termino con ese exponente ingresado por lo tanto no podemos eliminar termino")]
+            [else
+             (mas-terminos term (buscar-eliminar resto expo))]
+            )
+         )]
+      )
+    ))
 ```
 
 **Demostración.** Sea $E(L, e)$ el resultado de `buscar-eliminar`. Se
@@ -380,46 +435,98 @@ polinomio, así que no hay nada que preservar).
 **Código.**
 
 ```racket
-;; insertar-termino : polinomio x coeficiente x exponente -> polinomio
-;; Propósito: validar, descartar coeficientes cero y delegar la inserción.
+;;Nombre de la funcion: insertar-termino
+;;Contrato(input and output): le entra un polinomio, un coeficiente y un exponente
+;;y devuelve un polinomio con un nuevo termino insertado o en caso de que haya
+;;un termino con el mismo exponente lo opera y devuelve el polinomio ya con ese termino operado
+;;Proposito: Poder insertar terminos a un polinomio que trae terminos.Tambien armar un polinomio desde 0 usando esta funcion
+;;finalmente otro objetivo es el de operar un termino ya existente para modificar su valor solo si tienen el mismo exponente
 (define insertar-termino
   (lambda (polinomio coeficiente exponente)
     (cond
-      [(not (and (number? coeficiente) (exact? coeficiente)))
-       (eopl:error 'insertar-termino "Lo siento: el coeficiente debe ser un numero exacto")]
-      [(not (and (integer? exponente) (exact? exponente) (>= exponente 0)))
-       (eopl:error 'insertar-termino "Lo siento: el exponente debe ser un entero no negativo")]
-      [(= coeficiente 0) polinomio]
+      [(not (and (number? coeficiente)
+                 (exact? coeficiente)))
+       (eopl:error
+        'insertar-termino
+        "Lo siento: el coeficiente debe ser un numero exacto")]
+      [(not (and (integer? exponente)
+                 (exact? exponente)
+                 (>= exponente 0)))
+       (eopl:error
+        'insertar-termino
+        "Lo siento: el exponente debe ser un entero no negativo")]
+      [(= coeficiente 0)
+       polinomio]
       [else
-       (poli (poli->var polinomio)
-             (buscar-insertar (poli->terms polinomio) coeficiente exponente))])))
+       (poli
+        (poli->var polinomio)
+        (buscar-insertar
+         (poli->terms polinomio)
+         coeficiente
+         exponente))
+       ]
+      )
+    ))
 
-;; buscar-insertar : terminos x coeficiente concreto x exponente -> terminos
-;; Propósito: dejar el término en su sitio, sumando si el exponente ya existe.
+
+;;Nombre de la funcion: buscar-insertar
+;;Contrato(input and output): le entra terminos del polinomio, un coeficiente y un exponente
+;;y devuelve los terminos incluyendo el termino que tiene el nuevo coeficiente y exponente .O devuelve los
+;;los terminos con uno de ellos modificado por la operacion ,pero eso es en caso de que el nuevo termino tenga el mismo exponente de un termino que ya estaba en el polinomio
+;;Proposito: Poder buscar el lugar exacto en donde insertar el nuevo termino o operar un termino que tiene el mismo exponente para finalmente
+;;devolver los terminos con el nuevo termino ingresado.
 (define buscar-insertar
-  (lambda (terms coef-new expo)
+  (lambda(terms coef-new expo)
     (cond
       [(sin-terminos? terms)
-       (cond
-         [(= coef-new 0) (sin-terminos)]
-         [else (mas-terminos (termino (coef-concreto->abstracto coef-new) (expo-nat expo))
-                             (sin-terminos))])]
+       (cond  ;Es un verificador en caso que se use de golpe la funcion buscar-insertar
+         [(= coef-new 0)
+          (sin-terminos)]
+         [else
+          (mas-terminos
+           (termino
+            (coef-concreto->abstracto coef-new)
+            (expo-nat expo))
+           (sin-terminos))]
+         )
+       ]
       [else
-       (let* ([term (mas-terminos->term terms)]
+       (let* (   ;;Funcion auxiliar dentro de funcion buscar
+              [term (mas-terminos->term terms)]  ;Define variables que se van a ligar en la zona exterior
               [resto (mas-terminos->resto terms)]
-              [expt (termino->expo term)])
-         (cond
-           [(= (expo-nat->k expt) expo)
-            (if (= (+ coef-new (coef-abstracto->concreto (termino->coef term))) 0)
-                resto
-                (mas-terminos
-                 (termino (coef-concreto->abstracto
-                           (+ coef-new (coef-abstracto->concreto (termino->coef term))))
-                          (expo-nat expo))
-                 resto))]
-           [(> expo (expo-nat->k expt))
-            (mas-terminos (termino (coef-concreto->abstracto coef-new) (expo-nat expo)) terms)]
-           [else (mas-terminos term (buscar-insertar resto coef-new expo))]))])))
+              [expt (termino->expo term)]
+              )
+          (cond
+            [(= (expo-nat->k expt) expo)
+             (if (= (+ coef-new
+                       (coef-abstracto->concreto
+                        (termino->coef term))) 0)
+                 ;;Si se cumple la condicion
+                 resto
+                 ;;Sino se cumple la condicion
+                 (mas-terminos
+                  (termino
+                   (coef-concreto->abstracto
+                    (+ coef-new
+                       (coef-abstracto->concreto
+                        (termino->coef term))))
+                   (expo-nat expo))
+                  resto)
+                 )
+             ]
+            [(> expo (expo-nat->k expt))
+             (mas-terminos
+              (termino
+               (coef-concreto->abstracto coef-new)
+               (expo-nat expo))
+              terms)]
+            [else
+             (mas-terminos term
+                           (buscar-insertar resto coef-new expo))]
+            )
+         )]
+      )
+    ))
 ```
 
 **Análisis de la función pública.** Hay cuatro caminos:
