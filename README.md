@@ -7,20 +7,16 @@ Carlos Andrés Delgado Saavedra
 Un TAD polinomio disperso construido tres veces con la misma interfaz: con
 listas, con procedimientos y con `define-datatype`. El enunciado completo,
 con la especificación, las partes y las rúbricas, está publicado en el Campus
-Virtual. Este repositorio es el punto de partida del grupo.
+Virtual. Este repositorio es el fork de trabajo del grupo.
 
 ## Integrantes
 
-Esta tabla es lo que identifica al grupo. Sin ella, o con algún dato
-incompleto, la entrega pierde el 20 %; quien no aparezca aquí no cuenta como
-parte del grupo.
-
 | Nombre completo | Código | Correo institucional |
 |---|---|---|
-| | | |
-| | | |
-| | | |
-| | | |
+| Andres Felipe Quiceno Gil | 2477362 | quiceno.andres@correounivalle.edu.co |
+| Yonier Alejandro Vega Rojas | 2477056 | yonier.vega@correounivalle.edu.co |
+| Jhon Fabricio Hurtado Marin | 2459472 | hurtado.jhoan@correounivalle.edu.co |
+| Juan Esteban Aguirre Castañeda | 2459676 | juan.esteban.aguirre@correounivalle.edu.co |
 
 ## Cómo se entrega
 
@@ -46,17 +42,18 @@ polinomios-listas.rkt            Parte 1: representación basada en listas
 polinomios-procedimientos.rkt    Parte 2: representación basada en procedimientos
 polinomios-datatypes.rkt         Parte 3: representación con datatypes, más la suma
 pruebas-polinomios.rkt           Parte 4: pruebas con rackunit sobre las tres
-docs/informe-correccion.md       Parte 5: se llena la plantilla
-docs/informe-ast.md              Parte 6: se llena la plantilla
+docs/informe-correccion.md       Parte 5: informe de corrección
+docs/informe-ast.md              Parte 6: informe de árboles de sintaxis abstracta
 ```
 
 Los archivos de implementación exportan sus funciones con `provide` y no
-contienen pruebas; el archivo de pruebas las importa con `require`. Las
-plantillas de `docs/` se llenan en el mismo archivo, reemplazando los
-marcadores `{{...}}` y sin quitar las secciones.
+contienen pruebas; el archivo de pruebas las importa con `require`.
 
 ## Cómo se corre
 
 ```bash
 racket pruebas-polinomios.rkt
 ```
+
+Si todas las pruebas pasan, no imprime nada. Si alguna falla, muestra un
+mensaje `FAILURE` con la ubicación de la prueba.
